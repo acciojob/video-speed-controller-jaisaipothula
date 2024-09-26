@@ -1,46 +1,46 @@
-const video = document.getElementById('video');
-const playerButton = document.getElementById('player__button');
+const video = document.querySelector('.player__video');
+const playButton = document.getElementById('player__button');
 const rewindButton = document.getElementById('rewind');
-const skipButton = document.getElementById('skip');
+const forwardButton = document.getElementById('forward');
 const volumeControl = document.getElementById('volume');
 const playbackSpeedControl = document.getElementById('playbackSpeed');
 const progress = document.querySelector('.progress');
 const progressFilled = document.querySelector('.progress__filled');
 
-playerButton.addEventListener('click', togglePlayPause);
-video.addEventListener('timeupdate', updateProgress);
-rewindButton.addEventListener('click', () => rewind(10));
-skipButton.addEventListener('click', () => skip(25));
-volumeControl.addEventListener('input', updateVolume);
-playbackSpeedControl.addEventListener('input', updatePlaybackSpeed);
-
-function togglePlayPause() {
+// Play/Pause functionality
+playButton.addEventListener('click', () => {
     if (video.paused) {
         video.play();
-        playerButton.textContent = '❚ ❚';
+        playButton.textContent = '❚ ❚'; // Change to pause symbol
     } else {
         video.pause();
-        playerButton.textContent = '►';
+        playButton.textContent = '►'; // Change to play symbol
     }
-}
+});
 
-function updateProgress() {
-    const percent = (video.currentTime / video.duration) * 100;
-    progressFilled.style.width = `${percent}%`;
-}
+// Rewind functionality
+rewindButton.addEventListener('click', () => {
+    video.currentTime -= 10;
+});
 
-function rewind(seconds) {
-    video.currentTime = Math.max(0, video.currentTime - seconds);
-}
+// Forward functionality
+forwardButton.addEventListener('click', () => {
+    video.currentTime += 25;
+});
 
-function skip(seconds) {
-    video.currentTime = Math.min(video.duration, video.currentTime + seconds);
-}
+// Volume control
+volumeControl.addEventListener('input', () => {
+    video.volume = volumeControl.value / 100; // Convert percentage to a value between 0 and 1
+});
 
-function updateVolume() {
-    video.volume = volumeControl.value;
-}
+// Playback speed control
+playbackSpeedControl.addEventListener('input', () => {
+    video.playbackRate = playbackSpeedControl.value; // Set playback speed
+});
 
-function updatePlaybackSpeed() {
-    video.playbackRate = playbackSpeedControl.value;
-}
+// Progress bar update
+video.addEventListener('timeupdate', () => {
+    const percentage = (video.currentTime / video.duration) * 100;
+    progress.value = percentage;
+    progressFilled.style.width = `${percentage}%`;
+});
